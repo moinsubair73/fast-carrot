@@ -1,3 +1,4 @@
+Try AI directly in your favorite apps … Use Gemini to generate drafts and refine content, plus get Gemini Pro with access to Google's next-gen AI
 # Content Engine + Repurposer
 
 Turn one input, a blog, a case note, or a podcast transcript, into a week of LinkedIn posts in your own voice, scored before you ever see them, with a hard grounding gate that kills any unsupported claim.
@@ -7,7 +8,7 @@ This repo has two things:
 1. **The engine** (`index.html`) — a self-contained page that walks the loop: Source → Angles (you curate) → Drafts (scored, you approve) → The week. Runs the real pipeline on Claude.
 2. **The skill** (`skills/content-repurposer/SKILL.md`) — the same loop as a reusable Agent Skill you can run in Claude.
 
-> **Live demo:** `https://<your-deployment-url>`  ·  built by Moin Subair
+> **Live demo:** https://fast-carrot.vercel.app/  ·  built by Moin Subair
 
 ---
 
@@ -39,7 +40,7 @@ Open `index.html` in any browser, or visit the live link above. Pick a sample so
 **2. Claude Code (one command).** Register this repo as a plugin marketplace, then install:
 
 ```
-/plugin marketplace add <your-github-username>/<this-repo>
+/plugin marketplace add moinsubair73/fast-carrot
 /plugin install content-repurposer@moin-gtm-skills
 ```
 
