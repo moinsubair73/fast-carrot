@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plastic Surgeon · Content Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Nunito+Sans:wght@400;600;700&family=Montserrat:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Dr. Mohsina brand (drmohsinasculpts.com) ===== */
+  :root{
+    --accent:#9E4B47;        /* primary maroon/terracotta */
+    --accent-dark:#91241E;   /* darker maroon, hover/CTA */
+    --navy:#042551;          /* deep navy accents */
+    --ink:#101010;           /* near-black headings */
+    --text:#334155;          /* slate body text */
+    --muted:#69727D;         /* muted grey */
+    --white:#FFFFFF;
+    --cream:#FAF9F5; --blue:#EDF2F7;
+    --accent-soft:#F3E7E5; --line:#E9E3DD; --line2:#DBD4CC;
+    --warn:#C0392B; --warn-soft:#F8E5E2;
+    --font-display:'Playfair Display',serif;
+    --font-body:'Nunito Sans',sans-serif;
+    --font-ui:'Montserrat',sans-serif;
+    --shadow:0 1px 2px rgba(16,16,16,.05),0 12px 30px rgba(16,16,16,.06);
+    --rpill:50px; --r:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--white);color:var(--text);
+    font-family:var(--font-body);line-height:1.65;
+    background-image:radial-gradient(circle at 8% -6%, var(--cream) 0, transparent 40%),radial-gradient(circle at 100% 0, var(--blue) 0, transparent 32%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:34px 22px 60px}
+  .eyebrow{font-family:var(--font-ui);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .hero h1{font-family:var(--font-display);font-weight:600;font-size:44px;line-height:1.04;margin:8px 0 12px;color:var(--ink);letter-spacing:-.01em}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero .lede{font-size:16px;color:var(--text);max-width:60ch;margin:0}
+  .hero .lede b{color:var(--accent);font-weight:700}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:var(--white);padding:8px 14px;border-radius:var(--rpill);font-size:12px;color:var(--muted);white-space:nowrap;font-family:var(--font-ui)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  .stepper{display:flex;gap:8px;margin:26px 0 18px;flex-wrap:wrap}
+  .stepper .s{flex:1;min-width:140px;border:1px solid var(--line);background:var(--white);border-radius:12px;padding:11px 14px;box-shadow:var(--shadow);opacity:.5;transition:.2s}
+  .stepper .s.active{opacity:1;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft),var(--shadow)}
+  .stepper .s.done{opacity:1}
+  .stepper .s .n{font-family:var(--font-ui);font-size:10px;color:var(--muted);letter-spacing:.08em}
+  .stepper .s .t{font-family:var(--font-display);font-weight:600;font-size:16px;margin-top:2px;color:var(--ink)}
+  .stepper .s .h{font-size:11.5px;color:var(--muted)}
+  .panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:24px 26px;margin-bottom:16px;display:none}
+  .panel.show{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .panel h2{font-family:var(--font-display);font-weight:600;font-size:23px;margin:0 0 4px;color:var(--ink)}
+  .panel .divider{width:46px;height:0;border-top:2px dotted var(--accent);margin:8px 0 14px;opacity:.7}
+  .panel .sub{font-size:13.5px;color:var(--muted);margin:0 0 16px}
+  .gatetag{font-family:var(--font-ui);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:var(--rpill);display:inline-block}
+  .gatetag.human{color:#fff;background:var(--navy)}
+  /* source dropdown */
+  .srclabel{font-family:var(--font-ui);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px}
+  .srcsel{width:100%;border:1px solid var(--line2);border-radius:10px;padding:13px 15px;font-family:var(--font-body);font-size:14.5px;color:var(--ink);background:var(--cream);cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239E4B47' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 15px center}
+  .srcprev{margin-top:10px;font-size:13px;color:var(--text);background:var(--blue);border:1px solid var(--line);border-radius:10px;padding:12px 15px;display:none}
+  .srcprev.show{display:block}
+  .srcprev .k{font-family:var(--font-ui);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:4px}
+  .orpaste{margin:16px 0 0;font-family:var(--font-ui);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .paste{width:100%;margin-top:8px;border:1px dashed var(--line2);border-radius:12px;padding:12px 14px;font-family:var(--font-body);font-size:13.5px;color:var(--ink);background:var(--cream);min-height:58px;resize:vertical}
+  .live{margin-top:14px;border:1px solid var(--line2);border-radius:12px;background:var(--cream);overflow:hidden}
+  .live summary{cursor:pointer;padding:11px 15px;font-size:13px;font-weight:700;color:var(--ink);list-style:none;display:flex;align-items:center;gap:8px;font-family:var(--font-body)}
+  .live summary::-webkit-details-marker{display:none}
+  .live summary .tag{font-family:var(--font-ui);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--navy);padding:3px 9px;border-radius:var(--rpill)}
+  .live .lb{padding:4px 15px 15px}
+  .live label{display:block;font-size:11px;color:var(--muted);margin:10px 0 4px;font-family:var(--font-ui);letter-spacing:.04em}
+  .live input{width:100%;border:1px solid var(--line2);border-radius:9px;padding:9px 12px;font-family:var(--font-ui);font-size:12.5px;background:#fff;color:var(--ink)}
+  .live .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:640px){.live .two{grid-template-columns:1fr}}
+  .live .keynote{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.55}
+  .row{display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap}
+  button.go{font-family:var(--font-ui);font-weight:600;font-size:13.5px;letter-spacing:.02em;color:#fff;background:var(--accent);border:none;border-radius:var(--rpill);padding:12px 24px;cursor:pointer;box-shadow:var(--shadow);transition:.15s}
+  button.go:hover{background:var(--accent-dark)}
+  button.go:disabled{background:var(--line2);cursor:not-allowed;box-shadow:none}
+  button.ghost{font-family:var(--font-ui);font-weight:500;font-size:13px;color:var(--muted);background:none;border:1px solid var(--line2);border-radius:var(--rpill);padding:11px 18px;cursor:pointer}
+  button.ghost:hover{color:var(--ink);border-color:var(--ink)}
+  .hint{font-size:12px;color:var(--muted);font-family:var(--font-ui)}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .reveal{animation:rise .34s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .angle{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:10px;background:var(--cream);cursor:pointer;transition:.15s}
+  .angle:hover{border-color:var(--line2)}
+  .angle.on{border-color:var(--accent);background:var(--accent-soft)}
+  .angle.off{opacity:.55}
+  .ck{width:20px;height:20px;border-radius:6px;border:2px solid var(--line2);flex:0 0 auto;margin-top:2px;display:grid;place-items:center;font-size:13px;color:#fff}
+  .angle.on .ck{background:var(--accent);border-color:var(--accent)}
+  .angle .pillar{font-family:var(--font-ui);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+  .angle.kill .pillar{color:var(--warn)}
+  .angle .ti{font-family:var(--font-display);font-weight:600;font-size:16px;margin:2px 0 3px;color:var(--ink)}
+  .angle .ds{font-size:13px;color:var(--muted)}
+  .draft{border:1px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .draft .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;background:var(--cream);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .draft .pillar{font-family:var(--font-ui);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+  .draft.killed .pillar{color:var(--warn)}
+  .scores{display:flex;gap:6px;flex-wrap:wrap}
+  .sc{font-family:var(--font-ui);font-size:10px;border:1px solid var(--line2);border-radius:var(--rpill);padding:3px 9px;color:var(--muted)}
+  .sc b{color:var(--ink)}
+  .sc.good{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .sc.bad{border-color:var(--warn);color:var(--warn);background:var(--warn-soft)}
+  .draft .bd{padding:16px 18px;font-size:14.5px;white-space:pre-wrap;line-height:1.6;color:var(--text)}
+  .draft .flag{margin:0 18px 16px;padding:11px 14px;border-radius:10px;font-size:13px;background:var(--warn-soft);border:1px solid var(--warn);color:var(--warn)}
+  .draft .act{display:flex;gap:8px;padding:0 18px 16px;flex-wrap:wrap}
+  .draft.approved{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-soft),var(--shadow)}
+  .draft .editbox{width:calc(100% - 36px);margin:0 18px 14px;border:1px solid var(--accent);border-radius:10px;padding:12px 14px;font-family:var(--font-body);font-size:14px;line-height:1.6;color:var(--ink);min-height:175px;resize:vertical;background:var(--cream)}
+  .draft.killed .bd{color:var(--muted)}
+  .strike{text-decoration:line-through;text-decoration-color:var(--warn)}
+  .verdict{font-family:var(--font-ui);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:var(--rpill)}
+  .verdict.pass{color:#fff;background:var(--accent)}
+  .verdict.kill{color:#fff;background:var(--warn)}
+  .day{display:grid;grid-template-columns:96px 1fr;gap:14px;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;background:var(--white);box-shadow:var(--shadow)}
+  @media(max-width:640px){.day{grid-template-columns:1fr}}
+  .day .when{font-family:var(--font-ui);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding-top:3px}
+  .day .pillar{font-family:var(--font-ui);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+  .day .post{font-size:14px;white-space:pre-wrap;line-height:1.55;color:var(--text)}
+  .day .cmt{margin-top:11px;border-top:1px dashed var(--line2);padding-top:10px;font-size:12.5px;color:var(--muted)}
+  .day .cmt b{color:var(--ink)}
+  .day .cmt .k,.dm .k{font-family:var(--font-ui);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);display:block;margin-bottom:3px}
+  .dm{border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:10px;padding:12px 15px;margin-top:10px;background:var(--cream);font-size:13px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:8px 0 4px}
+  @media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}
+  .stat{background:var(--white);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:14px 16px}
+  .stat .n{font-family:var(--font-display);font-weight:600;font-size:27px;line-height:1;color:var(--accent)}
+  .stat .n.navy{color:var(--navy)}
+  .stat .k{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .cta{margin-top:18px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:14px;padding:18px 22px}
+  .cta h3{font-family:var(--font-display);font-weight:600;margin:0 0 4px;font-size:19px;color:var(--ink)}
+  .cta p{margin:0;font-size:13.5px;color:var(--text)}
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--font-ui)}
+  footer code{font-family:var(--font-ui);background:var(--blue);padding:2px 8px;border-radius:5px;font-size:11px;color:var(--navy)}
+  .note{font-size:11px;color:var(--muted);font-family:var(--font-ui);margin-top:10px}
+  .err{color:var(--warn);font-size:12.5px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="hero">
+      <div class="eyebrow">Content Engine · running on Claude</div>
+      <h1>Plastic Surgeon · <em>Content Engine</em></h1>
+      <p class="lede">One blog, case, or podcast in. A week of LinkedIn content out, written in <b>her voice</b>, with <b>every medical claim checked</b> before a human ever sees it.</p>
+    </div>
+    <div class="pills">
+      <span class="pill"><span class="dot"></span> live demo · the loop</span>
+      <span class="pill">grounding gate · on</span>
+    </div>
+  </div>
+
+  <div class="stepper" id="stepper">
+    <div class="s active" data-s="1"><div class="n">01</div><div class="t">Source</div><div class="h">blog · case · podcast</div></div>
+    <div class="s" data-s="2"><div class="n">02</div><div class="t">Angles</div><div class="h">you curate</div></div>
+    <div class="s" data-s="3"><div class="n">03</div><div class="t">Drafts</div><div class="h">scored, you approve</div></div>
+    <div class="s" data-s="4"><div class="n">04</div><div class="t">The week</div><div class="h">posts + comments + DM</div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="panel show" id="p1">
+    <h2>Drop in one input</h2>
+    <div class="divider"></div>
+    <p class="sub">Pick a source below (runs instantly, baked), or switch on Live mode and paste your own. The engine finds the angles, writes each in her voice, and turns blog or podcast material into LinkedIn posts.</p>
+
+    <label class="srclabel" for="src">Choose a source</label>
+    <select class="srcsel" id="src">
+      <option value="">— select a blog or podcast —</option>
+      <option value="mommy">Blog · Transform Your Post-Pregnancy Body</option>
+      <option value="breast">Blog · Breast Augmentation vs Breast Lift</option>
+      <option value="podcast">Podcast · Cosmetic-medicine trends (contextualised)</option>
+    </select>
+    <div class="srcprev" id="srcPreview"></div>
+
+    <div class="orpaste">or paste your own</div>
+    <textarea class="paste" id="paste" placeholder="Paste your own blog, case notes, or podcast transcript here, then run it live with your Claude API key (Live mode below)."></textarea>
+
+    <details class="live" id="liveBox">
+      <summary><span class="tag">Live mode</span> Run it for real on your own content (your Claude API key)</summary>
+      <div class="lb">
+        <label>ANTHROPIC API KEY (stays in your browser, sent only to api.anthropic.com)</label>
+        <input id="apiKey" type="password" placeholder="sk-ant-…" autocomplete="off" />
+        <div class="two">
+          <div><label>ANGLE MODEL</label><input id="angleModel" value="claude-sonnet-4-6" /></div>
+          <div><label>DRAFT MODEL</label><input id="draftModel" value="claude-opus-4-6" /></div>
+        </div>
+        <div class="keynote">Live mode runs the real pipeline: angle extraction, then draft-and-self-score on each angle, with the grounding gate enforced. Your key is held in memory only, never stored or sent anywhere but Anthropic. Update the model names if your account uses different ones.</div>
+      </div>
+    </details>
+
+    <div class="row">
+      <button class="go" id="go1" disabled>Extract angles →</button>
+      <span class="hint" id="h1">select a source to continue</span>
+    </div>
+    <div class="err" id="err1"></div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" id="p2">
+    <h2>Pick the angles worth posting <span class="gatetag human">Human gate 1 · curation</span></h2>
+    <div class="divider"></div>
+    <p class="sub">The engine proposes, you select. Killing the weak or off-position angles here is the highest-leverage human moment in the loop.</p>
+    <div id="angles"></div>
+    <div class="row">
+      <button class="ghost" onclick="goStep(1)">← Back</button>
+      <button class="go" id="go2">Generate drafts →</button>
+      <span class="hint" id="h2"></span>
+    </div>
+    <div class="err" id="err2"></div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" id="p3">
+    <h2>Review, score, approve <span class="gatetag human">Human gates 2 + 3</span></h2>
+    <div class="divider"></div>
+    <p class="sub">Each draft is written in her voice, scored 0 to 5 on voice / positioning / grounding, and revised once if it falls short. <b>Any draft that fails grounding is killed before it reaches you.</b></p>
+    <div id="drafts"></div>
+    <div class="row">
+      <button class="ghost" onclick="goStep(2)">← Back</button>
+      <button class="go" id="go3">Build the week →</button>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="panel" id="p4">
+    <h2>The week, staggered</h2>
+    <div class="divider"></div>
+    <p class="sub">Approved posts sequenced across the week, each with the first comment (link goes here, never the post body) and a warm-lead reply draft. One tap to your scheduler, never unattended auto-post.</p>
+    <div id="week"></div>
+    <div class="stats">
+      <div class="stat"><div class="n">~3 hrs</div><div class="k">saved per input, drafting down to review</div></div>
+      <div class="stat"><div class="n navy">0 to 5</div><div class="k">every post scored before a human sees it</div></div>
+      <div class="stat"><div class="n">1 gate</div><div class="k">human approval, never auto-post</div></div>
+      <div class="stat"><div class="n navy">0</div><div class="k">unsupported medical claims shipped</div></div>
+    </div>
+    <div class="cta">
+      <h3>Want this on your own voice?</h3>
+      <p>This demo runs a plastic surgeon's real material. The giveaway skill interviews you, ingests your files, and turns one input into a week of posts in your voice, with the same grounding gate. Link in the first comment.</p>
+    </div>
+    <div class="row">
+      <button class="ghost" onclick="goStep(1)">↻ Run another</button>
+      <button class="go" onclick="copyWeek()">Copy all posts</button>
+      <span class="hint" id="h4"></span>
+    </div>
+  </section>
+
+  <footer>
+    <div><b style="color:var(--ink)">Drafts</b> on <code>Claude Opus</code> for voice · <b style="color:var(--ink)">angles</b> on <code>Claude Sonnet</code> · grounding gate is a separate validator. Built by Moin Subair.</div>
+    <div>Cases shown with patient consent · results vary</div>
+  </footer>
+  <div class="note">Public demo runs client-side on baked, consented samples. Live mode calls Anthropic directly with your key. No data is stored. Not medical advice.</div>
+
+</div>
+
+<script>
+/* ===================== baked, grounded samples ===================== */
+const SAMPLES = {
+  mommy: {
+    key:'mommy', kind:'Blog', title:'Transform Your Post-Pregnancy Body',
+    ex:'Her Mommy Makeover guide: breast enhancement, tummy tuck, liposuction. Muscle repair, candidacy, risks, recovery.',
+    angles:[
+      {pillar:'Reconstruction', ti:'A "tummy tuck" is often muscle repair, not vanity.', ds:'Pregnancy separates the abdominal wall (diastasis). That gap is structural.', on:true},
+      {pillar:'Myth-busting', ti:'A mommy makeover is not a weight-loss shortcut.', ds:'Who it is actually for: near target weight, done having children.', on:true},
+      {pillar:'Honest / safety', ti:'The risks the glossy before-and-afters leave out.', ds:'Seroma, numbness, scar maturation. Informed consent as the whole relationship.', on:true},
+      {pillar:'Off-position', ti:'7 celebrity mommy makeovers, ranked.', ds:'Reach-bait listicle. No stance, not her voice.', on:false, weak:true},
+    ],
+    drafts:[
+      { pillar:'Reconstruction', voice:5, pos:5, ground:5, verdict:'pass',
+        body:`"It's just a tummy tuck."\n\nNot quite.\n\nDuring pregnancy the two columns of abdominal muscle often separate down the middle, a real anatomical change called diastasis. No amount of core work pulls them back together, because the gap is structural, not soft tissue.\n\nWhen a mommy makeover includes abdominal repair, we stitch that muscle wall back into place, then remove the skin that stretched over it. The flatter contour is the visible part. The repaired wall underneath is the part that actually matters.\n\nThis is why I'm careful with the word "cosmetic." Some of it is. Some of it is reconstruction that happens to look cosmetic.\n\nResults vary. A consultation is the only way to know what your body actually needs.` },
+      { pillar:'Myth-busting', voice:5, pos:5, ground:5, verdict:'pass',
+        body:`A mommy makeover is not a weight-loss procedure.\n\nI turn people away for this, and it's the responsible answer.\n\nThe procedure is built for a body already near its target weight and done having children. It removes loose skin and repairs a stretched muscle wall. It does not melt fat you are still carrying, and it will not hold its result if your weight swings afterward.\n\nIf you are still mid weight-loss journey, the kind advice is to finish that first. Surgery rewards a stable starting point. Rushing it wastes your money and your recovery.\n\nThe best candidates almost don't need convincing. They have done the work, and surgery finishes what biology won't.` },
+      { pillar:'Honest / safety', voice:5, pos:4, ground:1, verdict:'kill',
+        flag:'Grounding 1/5 · KILLED. The draft claims the makeover "removes 10+ kg for good," directly contradicting the source ("not a weight loss substitute"). Invented outcome. The gate kills it before review.',
+        body:`Beyond the new contour, a mommy makeover also removes 10+ kg for good and keeps it off, so it doubles as a permanent weight-loss solution for busy mothers…` },
+    ],
+    week:[
+      { when:'Tue · 8:30am', pillar:'Reconstruction', ref:0,
+        comment:'A plain-language guide to abdominal repair in a mommy makeover, what is structural vs lifestyle, and the questions to ask first. [link to her guide]',
+        dm:'Warm-lead reply to "I had no idea the muscle separates": "It surprises most people. If it would help, I have a short guide on abdominal-wall repair, happy to send it over. No pressure at all."' },
+      { when:'Fri · 7:00pm', pillar:'Myth-busting', ref:1,
+        comment:'How I assess whether someone is ready for this surgery, and why timing matters more than people expect. [link]', dm:null },
+    ]
+  },
+  breast: {
+    key:'breast', kind:'Blog', title:'Breast Augmentation vs. Breast Lift',
+    ex:'The difference most people get wrong: augmentation changes size, a lift changes position. When you need one, the other, or both.',
+    angles:[
+      {pillar:'Patient education', ti:'Augmentation changes size. A lift changes position.', ds:'Most confusion starts with conflating the two problems.', on:true},
+      {pillar:'Myth-busting', ti:'A lift can restore fullness with no implant at all.', ds:'The volume was there, just sitting lower. Repositioning brings it back.', on:true},
+      {pillar:'Reconstruction bridge', ti:'Sometimes the honest answer is both.', ds:'A real combined plan, not an upsell.', on:false},
+      {pillar:'Off-position', ti:'Quiz: which celebrity breast do you want?', ds:'Reach-bait. Off-brand, no substance.', on:false, weak:true},
+    ],
+    drafts:[
+      { pillar:'Patient education', voice:5, pos:5, ground:5, verdict:'pass',
+        body:`Augmentation vs lift. Most of the confusion is one sentence.\n\nAugmentation changes the size of your breasts. A lift changes their position. They solve different problems.\n\nIf your concern is volume, that you have lost fullness or always wanted more, that is an implant conversation. If your concern is that your breasts sit lower than they used to, often after pregnancy, breastfeeding or weight loss, that is a lift, and it can be done with no implant at all.\n\nMany women assume they need implants to look fuller. Often a lift alone, by repositioning the tissue, gives back the look they thought only size could.\n\nWhich one you need is an examination, not a guess. But knowing the difference makes that first conversation far more useful.` },
+      { pillar:'Myth-busting', voice:5, pos:5, ground:5, verdict:'pass',
+        body:`"I'll need implants to look fuller."\n\nNot always, and this is the most useful thing I can tell you before a consultation.\n\nA breast lift uses no implants. It removes excess skin, tightens the tissue, and repositions everything higher on the chest. Nothing foreign goes in. For many women that repositioning alone restores the fullness they thought they had lost, because the volume was always there, just sitting lower.\n\nImplants are the right answer when the goal is genuinely more size. They are the wrong answer when the real problem was position all along.\n\nA good surgeon tells you which problem you actually have, even when it means a smaller operation.` },
+      { pillar:'Patient education', voice:5, pos:4, ground:1, verdict:'kill',
+        flag:'Grounding 1/5 · KILLED. The draft promises results "are permanent and last a lifetime." The source says results last roughly ten years and vary. Overpromise on a medical outcome. The gate kills it.',
+        body:`And the best part: your results are permanent and last a lifetime, so this is a one-time decision you will never have to revisit or maintain…` },
+    ],
+    week:[
+      { when:'Thu · 8:30am', pillar:'Patient education', ref:0,
+        comment:'A simple breakdown of augmentation vs lift, with the questions to bring to your consultation. [link to her guide]',
+        dm:'Warm-lead reply to "this finally made it click": "So glad it helped. If you are weighing your own options, I am always happy to talk it through honestly, what each can and cannot do."' },
+      { when:'Sat · 11:00am', pillar:'Myth-busting', ref:1,
+        comment:'Why a lift without implants is the right call for some women, and how to tell. [link]', dm:null },
+    ]
+  },
+  podcast: {
+    key:'podcast', kind:'Podcast summary', title:'Cosmetic-medicine trends (contextualised)',
+    ex:'A cosmetic-medicine roundtable: the "undetectable era", the move away from the Kardashian look, exosome and NAD hype, $1,700 creams. Summarised, then re-voiced as her own take.',
+    angles:[
+      {pillar:'Natural results', ti:'The "undetectable era" is just good surgery, finally named.', ds:'Natural vs dramatic. Restraint was always the harder, better goal.', on:true},
+      {pillar:'Myth-busting', ti:'A $1,700 cream, "30% better skin in one use." The honest math.', ds:'Price is not evidence. What actually moves skin, and what is branding.', on:true},
+      {pillar:'Honest / industry', ti:'Half of "new" beauty science is a launch, not a finding.', ds:'Exosomes, NAD drips, named "body" trends. Evidence vs buzz.', on:true},
+      {pillar:'Off-position', ti:'Celebrities who eat their placenta, a thread.', ds:'Pure curiosity bait. Not her lane.', on:false, weak:true},
+    ],
+    drafts:[
+      { pillar:'Natural results', voice:5, pos:5, ground:5, verdict:'pass',
+        body:`Surgeons are calling it the "undetectable era." I just call it the goal.\n\nThere has always been a quiet split among patients. A small group wants an obvious change. The far larger group wants to look like themselves, rested, not operated on.\n\nThe second is harder to deliver. Natural results come from doing less, not more: the lift that leaves a little skin, the volume that stops one step early. Overdone is not the limit of surgery. It is what happens when someone ignores the limit.\n\nSo when "undetectable" gets sold as the new trend, I smile. The careful surgeons were always aiming there. It was never about hiding that you had work done. It was about the work being good enough that nobody needed to know.\n\nResults vary. The right plan is matched to your face, not to a trend.` },
+      { pillar:'Myth-busting', voice:5, pos:5, ground:5, verdict:'pass',
+        body:`A luxury brand says its $1,700 cream improves your skin 30% after one use.\n\nLet me save you the money.\n\nNo cream reorganises skin by a third in one application. The ingredients with real, repeatable evidence are unglamorous and cheap by comparison: a good retinoid, daily sunscreen, sometimes a vitamin C. Most of what you pay above that is packaging, fragrance, and a name.\n\nThis is not anti-skincare. It is pro-evidence. Spend on the few things that work and be skeptical of any jar promising a number that sounds like magic.\n\nIf a result sounds too good to be true on the label, it usually is. Ask what the study actually measured.` },
+      { pillar:'Honest / industry', voice:5, pos:4, ground:1, verdict:'kill',
+        flag:'Grounding 1/5 · KILLED. The draft asserts exosome injections "regrow hair in 90% of patients," a claim the source explicitly flags as not approved and not evidenced. Invented efficacy statistic. The gate kills it.',
+        body:`The science is settled: exosome injections regrow hair in 90% of patients within months, and every clinic should be offering them now…` },
+    ],
+    week:[
+      { when:'Tue · 8:30am', pillar:'Natural results', ref:0,
+        comment:'What "natural results" actually takes, and the one question to ask a surgeon before any cosmetic procedure. [link to her guide]',
+        dm:'Warm-lead reply to "finally, an honest surgeon": "Thank you. If you are ever thinking it through for yourself, I am happy to talk honestly about what is worth doing and what is not."' },
+      { when:'Sat · 11:00am', pillar:'Myth-busting', ref:1,
+        comment:'The short list of skincare ingredients with real evidence, and how to spot a marketing claim. [link]', dm:null },
+    ]
+  }
+};
+
+const VOICE = `Dr. Mohsina Subair, plastic and cosmetic surgeon. Writes for LinkedIn (peers and informed readers, not patients to sell to).
+Voice: honest surgeon-educator. Warm, direct, declarative. Short lines, one idea up top. Demystifies; tells the truth, including when not to operate.
+Anchor pillar: reconstruction and restoration (post-cancer, burns, trauma, structural repair). Then natural-result cosmetic and the artistry of restraint. Then honest myth-busting.
+Hard rules: no em dashes; no hype words (game-changer, transformative, cutting-edge); specifics over adjectives; keep disclaimers like "results vary"; never shame a body; never invent a result, statistic, patient, or testimonial.
+Translation: input may be a blog, case notes, or a podcast transcript; output is a LinkedIn post. Strip emoji and hashtag stacks, expand the "why". For a podcast, summarise the relevant theme, then give her own grounded take, not a recap of who said what.
+Format: each post is 110 to 200 words, never a wall of text. One sharp line as the hook, then short lines with blank lines between ideas so the first three lines survive the LinkedIn "see more" fold. End with one light, non-salesy line. Write to ONE angle only; never try to summarise the whole source in a single post.`;
+
+/* ===================== state ===================== */
+let state = { sample:null, paste:'', angles:[], drafts:[], step:1 };
+
+const srcSel=document.getElementById('src');
+srcSel.addEventListener('change', ()=>{
+  const v=srcSel.value;
+  document.getElementById('err1').textContent='';
+  if(!v){ state.sample=null; document.getElementById('go1').disabled=true; document.getElementById('srcPreview').classList.remove('show'); document.getElementById('h1').textContent='select a source to continue'; return; }
+  state.sample=v; state.paste=''; document.getElementById('paste').value='';
+  const s=SAMPLES[v];
+  const pv=document.getElementById('srcPreview');
+  pv.innerHTML=`<span class="k">${s.kind}</span>${s.ex}`; pv.classList.add('show');
+  document.getElementById('go1').disabled=false;
+  document.getElementById('h1').textContent='baked sample · runs instantly';
+});
+document.getElementById('paste').addEventListener('input',e=>{
+  state.paste=e.target.value.trim();
+  if(state.paste.length>20){
+    state.sample=null; srcSel.value=''; document.getElementById('srcPreview').classList.remove('show');
+    document.getElementById('go1').disabled=false;
+    document.getElementById('h1').textContent='your input · needs Live mode + API key';
+  }
+});
+function getKey(){ return document.getElementById('apiKey').value.trim(); }
+
+/* ---- "it's generating" affordances (used by the baked demo path) ---- */
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function stageInto(id, msgs, per=460){
+  const w=document.getElementById(id);
+  for(const m of msgs){ w.innerHTML='<div class="hint"><span class="spin"></span>'+m+'</div>'; await sleep(per); }
+}
+async function streamInto(el, text){
+  const frames=38, step=Math.max(1,Math.ceil(text.length/frames));
+  for(let i=0;i<text.length;i+=step){ el.textContent=text.slice(0,i)+'▌'; await sleep(27); }
+  el.textContent=text;
+}
+
+document.getElementById('go1').onclick=async ()=>{
+  document.getElementById('err1').textContent='';
+  if(state.sample){
+    const b=document.getElementById('go1'); b.disabled=true;
+    goStep(2);
+    await stageInto('angles',['reading the source…','finding distinct angles…','assigning each to a pillar…']);
+    buildAngles(SAMPLES[state.sample].angles);
+    b.disabled=false; return;
+  }
+  if(!getKey()){ document.getElementById('err1').textContent='Paste your Anthropic API key in Live mode above to run your own content, or grab the giveaway skill from the first comment.'; document.getElementById('liveBox').open=true; return; }
+  await runLiveExtract();
+};
+
+async function runLiveExtract(){
+  const btn=document.getElementById('go1'); btn.disabled=true;
+  document.getElementById('h1').innerHTML='<span class="spin"></span>extracting angles…';
+  try{
+    const sys=VOICE+`\nReturn ONLY a JSON array of 3 to 5 angle objects: [{"pillar":"...","ti":"short angle title","ds":"one line on the angle"}]. No prose.`;
+    const out=await callClaude(document.getElementById('angleModel').value.trim(), sys, `SOURCE:\n\n${state.paste}\n\nReturn the JSON array of angles.`, 1200);
+    const arr=JSON.parse(extractJSON(out,'['));
+    arr.forEach(a=>a.on=true); buildAngles(arr); goStep(2);
+  }catch(e){ document.getElementById('err1').textContent='Live extract failed: '+e.message; }
+  finally{ btn.disabled=false; document.getElementById('h1').textContent='your input · live'; }
+}
+
+function buildAngles(list){
+  state.angles=list.map(a=>({...a}));
+  const wrap=document.getElementById('angles'); wrap.innerHTML='';
+  state.angles.forEach((a,idx)=>{
+    if(a.on===undefined) a.on=true;
+    const d=document.createElement('div');
+    d.className='angle reveal '+(a.on?'on':'off')+(a.weak?' kill':'');
+    d.style.animationDelay=(idx*90)+'ms';
+    d.innerHTML=`<div class="ck">${a.on?'✓':''}</div><div><div class="pillar">${a.pillar||''}</div><div class="ti">${a.ti||''}</div><div class="ds">${a.ds||''}</div></div>`;
+    d.onclick=()=>{ a.on=!a.on; d.className='angle '+(a.on?'on':'off')+(a.weak?' kill':''); d.querySelector('.ck').textContent=a.on?'✓':''; updateGo2(); };
+    wrap.appendChild(d);
+  });
+  updateGo2();
+}
+function updateGo2(){
+  const n=state.angles.filter(a=>a.on).length;
+  document.getElementById('h2').textContent=n+' selected';
+  document.getElementById('go2').disabled=n===0;
+}
+
+document.getElementById('go2').onclick=async ()=>{
+  document.getElementById('err2').textContent='';
+  if(state.sample){
+    const b=document.getElementById('go2'); b.disabled=true;
+    state.drafts=SAMPLES[state.sample].drafts;
+    goStep(3);
+    await stageInto('drafts',['reading the source…','writing in her voice…','scoring voice, positioning, grounding…','running the grounding gate…']);
+    await renderDrafts(state.drafts);
+    b.disabled=false; return;
+  }
+  await runLiveDrafts();
+};
+async function runLiveDrafts(){
+  const btn=document.getElementById('go2'); btn.disabled=true;
+  const chosen=state.angles.filter(a=>a.on); state.drafts=[];
+  try{
+    for(let i=0;i<chosen.length;i++){
+      document.getElementById('h2').innerHTML=`<span class="spin"></span>drafting ${i+1} of ${chosen.length}…`;
+      const sys=VOICE+`\nWrite ONE LinkedIn post for the given angle ONLY, grounded ONLY in the source. Do not recap the whole source.
+LENGTH: 110 to 200 words. Hard ceiling 220. If longer, cut it before returning.
+SHAPE: one-line hook, then short lines separated by blank lines (use \\n\\n in the "post" string). The first 3 lines must work as a standalone teaser above the fold. End on one light line.
+Then self-score. If any axis < 4, revise once and return the better version.
+Return ONLY JSON: {"post":"...","voice":0-5,"pos":0-5,"ground":0-5,"flags":"short note or empty","verdict":"pass|kill","firstComment":"first comment with a link placeholder","dm":"a short warm-lead reply or empty"}.
+Set verdict to "kill" and ground to 1 if the post states any claim, statistic, result, or testimonial not supported by the source.`;
+      const u=`SOURCE:\n${state.paste}\n\nANGLE: ${chosen[i].ti} (${chosen[i].pillar}) — ${chosen[i].ds}\n\nReturn the JSON.`;
+      const out=await callClaude(document.getElementById('draftModel').value.trim(), sys, u, 1500);
+      const d=JSON.parse(extractJSON(out,'{')); d.pillar=chosen[i].pillar; d.body=d.post; state.drafts.push(d);
+    }
+    goStep(3); await renderDrafts(state.drafts);
+  }catch(e){ document.getElementById('err2').textContent='Live draft failed: '+e.message; }
+  finally{ btn.disabled=false; document.getElementById('h2').textContent=chosen.length+' selected'; }
+}
+
+async function renderDrafts(list){
+  const wrap=document.getElementById('drafts'); wrap.innerHTML='';
+  for(const d of list){
+    const killed=(d.verdict==='kill')||d.ground<2;
+    const el=document.createElement('div'); el.className='draft reveal';
+    el.innerHTML=`<div class="hd"><span class="pillar">${esc(d.pillar||'')}</span><div class="scores" data-sc><span class="sc">scoring…</span></div></div><div class="bd" data-bd></div>`;
+    wrap.appendChild(el);
+    const bd=el.querySelector('[data-bd]');
+    await streamInto(bd, d.body||d.post||'');     // type the post out
+    await sleep(300);                              // pause before the gate weighs in
+    el.querySelector('[data-sc]').innerHTML=`
+      <span class="sc ${d.voice>=4?'good':'bad'}">voice <b>${d.voice}</b>/5</span>
+      <span class="sc ${d.pos>=4?'good':'bad'}">positioning <b>${d.pos}</b>/5</span>
+      <span class="sc ${d.ground>=4?'good':'bad'}">grounding <b>${d.ground}</b>/5</span>
+      <span class="verdict ${killed?'kill':'pass'}">${killed?'killed':'pass'}</span>`;
+    if(killed){
+      el.classList.add('killed'); bd.classList.add('strike');
+      if(d.flag||d.flags){ const f=document.createElement('div'); f.className='flag reveal'; f.innerHTML=`⚠ <b>Grounding gate.</b> ${esc(d.flag||d.flags)}`; el.appendChild(f); }
+    } else {
+      if(d.approved===undefined) d.approved=true;
+      el.classList.toggle('approved', d.approved);
+      const act=document.createElement('div'); act.className='act';
+      const editBtn=document.createElement('button'); editBtn.className='ghost'; editBtn.textContent='Edit';
+      const appBtn=document.createElement('button');
+      const paintApp=()=>{ appBtn.className=d.approved?'go':'ghost'; appBtn.style.padding='9px 18px'; appBtn.textContent=d.approved?'Approved ✓':'Approve'; el.classList.toggle('approved',d.approved); };
+      paintApp();
+      appBtn.onclick=()=>{ d.approved=!d.approved; paintApp(); };
+      editBtn.onclick=()=>enterEdit(el,bd,d,act);
+      act.appendChild(editBtn); act.appendChild(appBtn); el.appendChild(act);
+    }
+    await sleep(220);
+  }
+}
+function enterEdit(el,bd,d,act){
+  const ta=document.createElement('textarea'); ta.className='editbox'; ta.value=d.body||d.post||'';
+  bd.style.display='none'; act.style.display='none';
+  el.insertBefore(ta, act);
+  const row=document.createElement('div'); row.className='act';
+  const cancel=document.createElement('button'); cancel.className='ghost'; cancel.textContent='Cancel';
+  const save=document.createElement('button'); save.className='go'; save.style.padding='9px 18px'; save.textContent='Save edit';
+  row.appendChild(cancel); row.appendChild(save); el.appendChild(row);
+  ta.focus();
+  const close=()=>{ ta.remove(); row.remove(); bd.style.display=''; act.style.display=''; };
+  save.onclick=()=>{ d.body=ta.value; bd.textContent=d.body; close(); };
+  cancel.onclick=close;
+}
+
+document.getElementById('go3').onclick=async ()=>{
+  const b=document.getElementById('go3'); b.disabled=true;
+  goStep(4);
+  await stageInto('week',['sequencing across the week…','placing the first comments…','drafting the warm-lead reply…'],400);
+  buildWeek(); b.disabled=false;
+};
+function buildWeek(){
+  const wrap=document.getElementById('week'); wrap.innerHTML='';
+  const add=(el,i)=>{ el.classList.add('reveal'); el.style.animationDelay=(i*120)+'ms'; wrap.appendChild(el); };
+  if(state.sample){
+    const s=SAMPLES[state.sample];
+    const days=s.week.filter(w=>s.drafts[w.ref].approved!==false);
+    if(!days.length){ wrap.innerHTML='<div class="hint">Approve at least one draft to build the week.</div>'; return; }
+    days.forEach((w,i)=>add(dayEl(w.when,w.pillar,s.drafts[w.ref].body,w.comment,w.dm),i));
+  } else {
+    const slots=['Tue · 8:30am','Thu · 8:30am','Sat · 11:00am','Mon · 7:00pm'];
+    const passed=state.drafts.filter(d=>!((d.verdict==='kill')||d.ground<2) && d.approved!==false);
+    if(!passed.length){ wrap.innerHTML='<div class="hint">Approve at least one draft to build the week.</div>'; return; }
+    passed.forEach((d,i)=>add(dayEl(slots[i%slots.length], d.pillar||'', d.body||d.post||'', d.firstComment||'[link in first comment]', i===0?d.dm:''),i));
+  }
+}
+function dayEl(when,pillar,post,comment,dm){
+  const el=document.createElement('div'); el.className='day';
+  el.innerHTML=`<div class="when">${esc(when)}</div><div>
+    <div class="pillar">${esc(pillar)}</div>
+    <div class="post">${esc(post)}</div>
+    <div class="cmt"><span class="k">First comment · link lives here</span>${esc(comment)}</div>
+    ${dm?`<div class="dm"><span class="k">Warm-lead outbound · human-sent</span>${esc(dm)}</div>`:''}
+  </div>`; return el;
+}
+
+/* ===================== Claude API (live mode) ===================== */
+async function callClaude(model, system, user, max_tokens){
+  const key=getKey(); if(!key) throw new Error('no API key');
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model, max_tokens, system, messages:[{role:'user',content:user}]})
+  });
+  if(!res.ok){ const t=await res.text(); throw new Error(res.status+' '+t.slice(0,160)); }
+  const data=await res.json();
+  return (data.content||[]).map(b=>b.text||'').join('');
+}
+function extractJSON(s, open){ const close=open==='['?']':'}'; const a=s.indexOf(open), b=s.lastIndexOf(close); if(a<0||b<0) throw new Error('no JSON in model output'); return s.slice(a,b+1); }
+function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function goStep(n){
+  state.step=n;
+  [1,2,3,4].forEach(i=>document.getElementById('p'+i).classList.toggle('show', i===n));
+  document.querySelectorAll('#stepper .s').forEach(s=>{ const si=+s.dataset.s; s.classList.toggle('active', si===n); s.classList.toggle('done', si<n); });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function copyWeek(){
+  let out='Plastic Surgeon — week of LinkedIn content\n\n';
+  document.querySelectorAll('#week .day').forEach(d=>{ out+=d.innerText+'\n\n----------\n\n'; });
+  navigator.clipboard.writeText(out).then(()=>document.getElementById('h4').textContent='copied to clipboard ✓',()=>document.getElementById('h4').textContent='select and copy from the cards above');
+}
+</script>
+</body>
+</html>
